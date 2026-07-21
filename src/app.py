@@ -1,5 +1,5 @@
 import customtkinter as ctk
-
+from calculator import Calculator
 
 # ----------------------------
 # |         Configs          |
@@ -59,6 +59,8 @@ class CalculatorApp:
 
         self.display = None
 
+        self.calculator = Calculator()
+
         self.configure_window()
         
         self.configure_grid()
@@ -102,6 +104,23 @@ class CalculatorApp:
         for i in range(6):
             self.app.grid_rowconfigure(i, weight=1)
 
+    def on_click_button(self, text):
+
+        result = self.calculator.press(text)
+        self.update_display(result)
+
+
+
+    def update_display(self, text):
+
+        self.display.delete(0, 'end')
+        
+        if text == '':
+            text = '0'
+
+        self.display.insert(0, text)
+
+
     def create_buttons(self):
 
         for row, row_data in enumerate(BUTTON_LAYOUT, start=1):
@@ -119,6 +138,7 @@ class CalculatorApp:
                     height=60,
                     font=("Segoe UI", 20),
                     fg_color=button_color,
+                    command= lambda text=button_data['text'] : self.on_click_button(text),
                 )
 
                 button.grid(
